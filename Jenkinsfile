@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3.9.9-eclipse-temurin-21'
-        }
-    }
+	agent any
 
 	stages {
 		stage('Checkout') {
@@ -14,19 +10,25 @@ pipeline {
 
 		stage('Build') {
 			steps {
-				sh 'mvn -B package -DskipTests'
+				sh 'chmod +x mvnw && ./mvnw -B package -DskipTests'
 			}
 		}
 
 		stage('Docker Build') {
 			steps {
-				sh 'docker build -t mi-app:latest .'
+				script {
+					if (sh(script: 'command -v docker >/dev/null 2>&1', returnStatus: true) == 0) {
+						sh 'docker build -t mi-app:latest .'
+					} else {
+						echo 'Docker no esta disponible en este agente; se omite Docker Build.'
+					}
+				}
 			}
 		}
 
 		stage('Test') {
 			steps {
-				sh 'mvn -B test'
+				sh './mvnw -B test'
 			}
 		}
 
