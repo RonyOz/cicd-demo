@@ -3,30 +3,17 @@ pipeline {
 
 	options {
 		timestamps()
-		skipDefaultCheckout(true)
 	}
 
 	stages {
-		stage('Checkout') {
-			steps {
-				checkout scm
-			}
-		}
-
 		stage('Build') {
 			steps {
 				sh 'chmod +x mvnw && ./mvnw -B -ntp clean package -DskipTests'
-				stash name: 'docker-context', includes: 'Dockerfile,target/**'
 			}
 		}
 
 		stage('Docker Build') {
-			agent {
-				label 'docker'
-			}
 			steps {
-				deleteDir()
-				unstash 'docker-context'
 				sh 'docker build -t mi-app:latest .'
 			}
 		}
