@@ -10,7 +10,7 @@ pipeline {
 
 		stage('Build') {
 			steps {
-				sh "sed -i 's/\r$//' mvnw && chmod +x mvnw && ./mvnw -B package -DskipTests"
+				sh "sed -i 's/\r\$//' mvnw && chmod +x mvnw && ./mvnw -B package -DskipTests"
 			}
 		}
 
@@ -28,7 +28,7 @@ pipeline {
 
 		stage('Test') {
 			steps {
-				sh "sed -i 's/\r$//' mvnw && chmod +x mvnw && ./mvnw -B test"
+				sh "sed -i 's/\r\$//' mvnw && chmod +x mvnw && ./mvnw -B test"
 			}
 		}
 
