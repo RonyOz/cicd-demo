@@ -16,16 +16,17 @@ pipeline {
 		stage('Build') {
 			steps {
 				sh 'chmod +x mvnw && ./mvnw -B -ntp clean package -DskipTests'
+				stash name: 'docker-context', includes: 'Dockerfile,target/**'
 			}
 		}
 
 		stage('Docker Build') {
-			when {
-				expression {
-					sh(script: 'command -v docker >/dev/null 2>&1', returnStatus: true) == 0
-				}
+			agent {
+				label 'docker'
 			}
 			steps {
+				deleteDir()
+				unstash 'docker-context'
 				sh 'docker build -t mi-app:latest .'
 			}
 		}
