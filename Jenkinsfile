@@ -15,7 +15,7 @@ pipeline {
 
 		stage('Build') {
 			steps {
-				sh 'mvn -B -ntp clean package -DskipTests'
+				sh 'chmod +x mvnw && ./mvnw -B -ntp clean package -DskipTests'
 			}
 		}
 
@@ -32,7 +32,7 @@ pipeline {
 
 		stage('Test') {
 			steps {
-				sh "mvn -B -ntp -DforkCount=0 -Dtest='!SeleniumExampleTest' test"
+				sh "chmod +x mvnw && ./mvnw -B -ntp -DforkCount=0 -Dtest='!SeleniumExampleTest' test"
 			}
 		}
 
